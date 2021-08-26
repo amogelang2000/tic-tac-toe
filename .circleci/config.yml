@@ -1,24 +1,30 @@
 version: 2.1
-orbs:
-  node: circleci/node@1.1
-  
-workflows:
-  test-app:
-    jobs:
-       - test
 
+workflows:
+  version: 2
+  Deploying Tic Tac:
+     jobs: 
+      - test
+      - build:
+          requires:
+            - test
 jobs:
   test:
     docker:
-     - image: cimg/node:14.13.0
+      - image: cimg/node:14.17.3
     steps:
       - checkout
-      - node/with-cache:
-          steps:
-            - run:
-               name: install dependencies
-               command: npm install
-            - run:
-                name: run tests 
-                command: npm run test
-            - run: npm run build
+      - run:
+         name: installing Dependencies
+         command: npm install
+  build:
+    docker:
+      - image: cimg/node:14.17.3
+    steps:
+      - checkout
+      - run:
+         name: installing Dependencies
+         command: npm install
+      - run:
+         name: build
+         command: npm run build
